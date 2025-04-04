@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../src/App.css'
 import _ from 'lodash'
 
@@ -51,10 +51,21 @@ const GameApp = () => {
     usedNumbers: [],
     selectedNumbers: []
   })
+  const [timer,setTimer] = useState(0)
+
+  useEffect(() => {
+    const interval = setTimeout(()=>{
+      setTimer(timer + 1)
+    },1000)
+    if(timer == 10){
+      clearInterval(interval)
+    }
+  },[timer])
 
   const selectionIsWrong = _.sum(state.selectedNumbers) > state.stars;
   const allNumbers = _.range(1, 10);
   const isGameDone = state.usedNumbers.length === allNumbers.length;
+  const isTimeOver = timer == 10;
   const resetGame = () => {
     setState({
       stars: 1 + Math.floor(Math.random() * 9),
@@ -108,10 +119,10 @@ const GameApp = () => {
     <div className="game">
       <div className="help">
         Pick 1 or more number that sum to the
-        number of stars
+        number of stars {timer}
       </div>
       <div className="body">
-        {isGameDone
+        {isGameDone || isTimeOver
           ? <button onClick={resetGame} >Play again</button> :
           <>
             <div className="left">
