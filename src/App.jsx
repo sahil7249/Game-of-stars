@@ -1,40 +1,8 @@
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import '../src/App.css'
 import _ from 'lodash'
-
-
-const colors = {
-  used: "lightgreen",
-  selected: "deepskyblue",
-  wrong: "lightcoral"
-};
-
-
-const NumberButton = ({ index, isSelected, isUsed, isWrong, onClick }) => {
-
-  const handleClick = () => {
-    onClick(index)
-  }
-
-  const numberStyle = () => {
-    if (isUsed) {
-      return { background: colors.used }
-    }
-    if (isWrong) {
-      return { background: colors.wrong }
-    }
-    if (isSelected) {
-      return { background: colors.selected }
-    }
-    return {}
-  }
-
-  return (
-    <button style={numberStyle()} className="number" onClick={handleClick}>
-      {index}
-    </button>
-  )
-}
+import TimerComponent from './components/Timer';
+import NumberButton from './components/NumberButton';
 
 const Star = () => {
   return <div className='star' />
@@ -51,21 +19,14 @@ const GameApp = () => {
     usedNumbers: [],
     selectedNumbers: []
   })
-  const [timer,setTimer] = useState(0)
 
-  useEffect(() => {
-    const interval = setTimeout(()=>{
-      setTimer(timer + 1)
-    },1000)
-    if(timer == 10){
-      clearInterval(interval)
-    }
-  },[timer])
+  const [timer,setTimer] = useState(0);
+  
 
   const selectionIsWrong = _.sum(state.selectedNumbers) > state.stars;
   const allNumbers = _.range(1, 10);
   const isGameDone = state.usedNumbers.length === allNumbers.length;
-  const isTimeOver = timer == 10;
+  // const isTimeOver = timer == 10;
   const resetGame = () => {
     setState({
       stars: 1 + Math.floor(Math.random() * 9),
@@ -73,6 +34,9 @@ const GameApp = () => {
       selectedNumbers: []
     })
   }
+
+  
+
   const onNumberClick = (number) => {
 
     setState((prevState) => {
@@ -122,7 +86,7 @@ const GameApp = () => {
         number of stars {timer}
       </div>
       <div className="body">
-        {isGameDone || isTimeOver
+        {isGameDone
           ? <button onClick={resetGame} >Play again</button> :
           <>
             <div className="left">
@@ -147,8 +111,13 @@ const GameApp = () => {
                 />
               })}
             </div>
-
           </>}
+      </div>
+      <div className='playBtn'>
+        <TimerComponent
+          timer={timer}
+          setTimer={setTimer}
+        />
       </div>
     </div>
   )

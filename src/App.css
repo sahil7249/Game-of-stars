@@ -50,3 +50,9 @@
 .number:hover{
     background-color: #ddd;
 }
+
+.playBtn{
+    max-width: 50px;
+    margin: 0 auto;
+    margin-top: 10px;
+}
